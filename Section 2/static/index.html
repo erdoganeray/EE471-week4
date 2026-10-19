@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page">
+    <h1>Library</h1>
+
+    <!-- Toolbar: availability toggle, type filter, add button -->
+    <div class="toolbar">
+      <label class="toggle">
+        <input type="checkbox" id="available-only">
+        <span class="switch"></span>
+        Available only
+      </label>
+      <div class="type-filter" id="type-filter">
+        <button type="button" class="tab active" data-type="">All</button>
+        <button type="button" class="tab" data-type="book">Books</button>
+        <button type="button" class="tab" data-type="dvd">DVDs</button>
+      </div>
+      <div class="toolbar-right">
+        <button type="button" class="button primary" id="add-button">+ Add Item</button>
+      </div>
+    </div>
+
+    <!-- Message area: the API's error (or success) message -->
+    <div class="message" id="message" hidden>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+      <span id="message-text"></span>
+    </div>
+
+    <div class="item-list" id="item-list"></div>
+
+    <div class="empty-state" id="empty-state" hidden>
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+      <p class="empty-title" id="empty-title">No items yet</p>
+      <p class="empty-text" id="empty-text">Add your first book or DVD to get started.</p>
+      <button type="button" class="button primary" id="empty-add-button">+ Add Item</button>
+    </div>
+  </main>
+
+  <!-- Add/Edit form -->
+  <dialog id="item-dialog">
+    <form class="dialog" id="item-form">
+      <h2 id="form-heading">Add New Item</h2>
+      <div class="message error" id="form-error" hidden></div>
+      <label class="field">
+        <span>Title</span>
+        <input id="title-input" placeholder="Enter a title">
+      </label>
+      <label class="field">
+        <span>Author / Director</span>
+        <input id="author-input" placeholder="Enter an author or director">
+      </label>
+      <div class="row">
+        <label class="field">
+          <span>Media Type</span>
+          <select id="type-input">
+            <option value="book">Book</option>
+            <option value="dvd">DVD</option>
+          </select>
+        </label>
+        <label class="field">
+          <span id="length-label">Page Count</span>
+          <input id="length-input" type="number" placeholder="e.g. 320">
+        </label>
+      </div>
+      <div class="buttons">
+        <button type="button" class="button secondary" id="cancel-button">Cancel</button>
+        <button type="submit" class="button primary">Save Item</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- One item card; script.js fills a copy for every item -->
+  <template id="card-template">
+    <article class="card">
+      <div class="card-header">
+        <h3 class="title"></h3>
+        <p class="author"></p>
+      </div>
+      <span class="badge type-badge"></span>
+      <div class="info">
+        <span class="length-icon"></span>
+        <span class="length"></span>
+        <span class="badge status-badge"></span>
+      </div>
+      <div class="actions">
+        <button type="button" class="button main-action"></button>
+        <button type="button" class="icon-button edit" aria-label="Edit">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
+        </button>
+        <button type="button" class="icon-button delete" aria-label="Delete">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+        </button>
+      </div>
+    </article>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>

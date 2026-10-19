@@ -48,3 +48,31 @@ Setup:
 > - The routes only translate HTTP to method calls. All rules stay in `custom_classes.py`: add the methods that are missing there (creating a Book or DVD from request fields, replacing all editable fields for PUT) and validate the values (non-empty title and author, positive whole numbers for page_count and duration).
 
 **Result:** `app.py` and `requirements.txt` in `Section 2/`. `custom_classes.py` got `create_item()`, `replace_item()` and value checks for new and updated fields.
+
+## Part 4: Frontend connected to the API
+
+### Prompt 4: Turn the Figma design into a web page
+
+> Turn my Figma library design ([EE471 Week4 Library App](https://www.figma.com/design/CZhIb4XToB6VuuPTPXXuTc/EE471-Week4-Library-App?node-id=0-1&t=lWF3u6F5ut9POitO-1), `design/library.png`) into a simple web page with plain HTML, CSS and JavaScript: `index.html`, `style.css` and `script.js` in `Section 2/static/`. Flask must serve the page at `http://127.0.0.1:5000`.
+>
+> - Match the design: item cards with title, author, type badge, page count or duration and availability badge; Checkout/Return, edit and delete buttons; the "Available only" toggle and All / Books / DVDs filter; "+ Add Item"; the error area; the empty state; and the add/edit form whose length field switches between page count and duration.
+> - Use the API for everything: load and filter items with `GET /api/items`, create with `POST`, edit with `PUT`, delete with `DELETE`, and check out or return with the `checkout` and `return` endpoints. Do not repeat the API's rules in JavaScript.
+> - Show the API's error message in the error area, for example the 409 message when deleting a checked-out item.
+
+**Result:** `index.html`, `style.css` and `script.js` in `Section 2/static/`, and `app.py` now serves the page at `/`.
+
+### Prompt 5: Fix the bugs found while reviewing the generated code
+
+Reviewing and testing the first version in the browser showed three things the AI got wrong:
+
+1. **Wrong status code handling:** `DELETE` answers `204 No Content` with an empty body, but the code always called `response.json()`. Deleting an item showed "Unexpected end of JSON input" in the error area and the list was not refreshed, although the item was deleted on the server.
+2. **Error and empty-state boxes always visible:** the CSS gave `.message` and `.empty-state` `display: flex`, which overrides the HTML `hidden` attribute. An empty red error box and the "No items yet" box were shown even with no error and a full list.
+3. **Misleading empty state:** when the filters hid every item, the page still said "No items yet".
+
+> Fix these bugs in `Section 2/static/`:
+>
+> - A `204 No Content` response has no body. Do not parse it as JSON, and do not show a success message when the API sends none.
+> - Elements with the `hidden` attribute must stay hidden even when their class sets `display`.
+> - When filters are active and no item matches, show "No matching items" instead of "No items yet".
+
+**Result:** `api()` in `script.js` skips the body of a 204 response, `style.css` has a `[hidden] { display: none !important; }` rule, and the empty state text depends on the active filters. All page and API tests pass.

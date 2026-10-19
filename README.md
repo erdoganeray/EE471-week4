@@ -134,3 +134,7 @@ Request body for `POST /api/items`:
 ```
 
 A book uses `"type": "book"` and `page_count` instead of `duration`. `PUT` needs every editable field (`title`, `author`, and `page_count` or `duration`); `PATCH` takes any of them.
+
+### Part 4: Web Page
+
+The web page in `Section 2/static/` (`index.html`, `style.css`, `script.js`) was generated from the Figma design with an AI coding tool and is served by the same Flask server: run `python app.py` and open http://127.0.0.1:5000. Every action goes through the API above, and the API's error messages are shown in the error area (for example, deleting the checked-out Arrival shows the 409 message). The prompts and the bugs fixed after reviewing the generated code are in [PROMPTS.md](Section%202/PROMPTS.md).

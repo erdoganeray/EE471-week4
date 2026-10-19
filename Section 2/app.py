@@ -8,7 +8,8 @@ from werkzeug.exceptions import HTTPException
 
 from custom_classes import DVD, Book, ItemNotFoundError, ItemStateError, LibraryCollection
 
-app = Flask(__name__)
+# Files in static/ are served from the root URL: /style.css, /script.js
+app = Flask(__name__, static_folder="static", static_url_path="")
 app.json.sort_keys = False  # keep the field order of to_dict()
 
 # One collection for the whole server, seeded with mixed item types
@@ -52,6 +53,11 @@ def http_error(error):
 
 
 # ---------- Routes ----------
+
+@app.get("/")
+def index():
+    return app.send_static_file("index.html")
+
 
 @app.post("/api/items")
 def create_item():
