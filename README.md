@@ -72,3 +72,18 @@ Request body (`operator` is one of `+`, `-`, `*`, `/`):
 | `a` or `b` missing or not a number | 400 | `{"error": "a and b must be numbers"}` |
 | Unknown operator | 400 | `{"error": "operator must be one of + - * /"}` |
 | Body is not a JSON object | 400 | `{"error": "Request body must be a JSON object"}` |
+
+## Section 2: Library App
+
+### Part 1: Figma Design (Bonus)
+
+The single-page library app was designed in Figma with an AI coding tool through the Figma MCP server, using Auto Layout throughout. It contains:
+
+- **Item Card** component with two variants, `Status=Available` and `Status=Checked out`, showing title, author, type, page count or duration and an availability badge, with Checkout/Return, edit and delete actions.
+- **Main** screen with the "Available only" toggle, the All / Books / DVDs filter, an error message area and the item list.
+- **Empty State** screen for a library with no items.
+- **Add/Edit form**: the length field switches between page count (Book) and duration in minutes (DVD).
+
+- **Figma (view-only):** [Library app design](https://www.figma.com/design/CZhIb4XToB6VuuPTPXXuTc/EE471-Week4-Library-App?node-id=0-1&t=lWF3u6F5ut9POitO-1)
+
+![Library app design](Section%202/design/library.png)
