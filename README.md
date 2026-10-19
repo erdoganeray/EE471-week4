@@ -9,18 +9,24 @@ In-class exercise for Week 4 of EE471 Modern Software Development Practices and 
 | `Section 1/` | Calculator: Figma design, web page and Flask backend |
 | `Section 2/` | Library app |
 | `EE471_MP1_Calculator/` | Mini Project 1, included as a Git submodule |
+| `EE471-week3/` | Week 3 library classes, included as a Git submodule |
 
-## Mini Project 1 Submodule
+## Submodules
 
-`EE471_MP1_Calculator` is the [Mini Project 1 repository](https://github.com/erdoganeray/EE471_MP1_Calculator), added to this repository as a **Git submodule**. Section 1 imports the `Calculator` class from its `custom_classes.py` and extends it; the file is not copied or modified.
+Earlier projects are added to this repository as **Git submodules** instead of being copied:
 
-Clone together with the submodule:
+| Submodule | Repository | Used in |
+|---|---|---|
+| `EE471_MP1_Calculator/` | [Mini Project 1](https://github.com/erdoganeray/EE471_MP1_Calculator) | Section 1 imports the `Calculator` class from its `custom_classes.py` and extends it; the file is not copied or modified. |
+| `EE471-week3/` | [Week 3](https://github.com/erdoganeray/EE471-week3) | Starting point of Section 2: the library classes in `custom_classes.py` and `main.py`. |
+
+Clone together with the submodules:
 
 ```bash
 git clone --recurse-submodules https://github.com/erdoganeray/EE471-week4.git
 ```
 
-If the repository was already cloned without it:
+If the repository was already cloned without them:
 
 ```bash
 git submodule update --init

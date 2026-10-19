@@ -1,3 +1,6 @@
 [submodule "EE471_MP1_Calculator"]
 	path = EE471_MP1_Calculator
 	url = https://github.com/erdoganeray/EE471_MP1_Calculator
+[submodule "EE471-week3"]
+	path = EE471-week3
+	url = https://github.com/erdoganeray/EE471-week3
