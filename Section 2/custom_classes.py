@@ -13,6 +13,22 @@ class ItemStateError(Exception):
     """
 
 
+def check_field(name, value):
+    """Check a value before it is stored in an editable field.
+
+    Raises:
+        ValueError: If title or author is not a non-empty string, or
+            page_count or duration is not a positive whole number.
+    """
+    if name in ("title", "author"):
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError(f"{name} must be a non-empty string")
+    elif name in ("page_count", "duration"):
+        # JSON true/false become bool, which Python also treats as int
+        if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
+            raise ValueError(f"{name} must be a positive whole number")
+
+
 class MediaItem:
     """A generic library item, such as a book or a movie.
 
@@ -156,6 +172,35 @@ class LibraryCollection:
         self.items.append(item)
         return item.id
 
+    def create_item(self, item_type, /, **fields):
+        """Create a Book or DVD from its field values and add it.
+
+        The "/" lets fields contain any name, so a wrong field is reported
+        as a ValueError instead of a Python TypeError.
+
+        Args:
+            item_type: "book" or "dvd".
+            **fields: title and author, plus page_count for a book or
+                duration for a DVD.
+
+        Returns:
+            The new item.
+
+        Raises:
+            ValueError: If the type is unknown, a field is missing or extra,
+                or a value is not valid.
+        """
+        if item_type not in ("book", "dvd"):
+            raise ValueError("type must be 'book' or 'dvd'")
+        item_class = Book if item_type == "book" else DVD
+        if set(fields) != set(item_class.editable_fields):
+            raise ValueError(f"a {item_type} needs exactly these fields: {', '.join(item_class.editable_fields)}")
+        for name, value in fields.items():
+            check_field(name, value)
+        item = item_class(**fields)
+        self.add_item(item)
+        return item
+
     def get_item(self, item_id):
         """Find an item by its id.
 
@@ -192,8 +237,8 @@ class LibraryCollection:
             and (item_type is None or item.item_type == item_type)
         ]
 
-    def update_item(self, item_id, **fields):
-        """Change the editable fields of an item.
+    def update_item(self, item_id, /, **fields):
+        """Change some editable fields of an item.
 
         Editable fields are title and author, plus page_count for books and
         duration for DVDs. Nothing is changed if any field is not allowed.
@@ -203,18 +248,38 @@ class LibraryCollection:
 
         Raises:
             ItemNotFoundError: If no item has this id.
-            ValueError: If a field is id, type, is_available or not editable
-                for this item.
+            ValueError: If no field is given, a field is id, type,
+                is_available or not editable for this item, or a value is
+                not valid.
         """
         item = self.get_item(item_id)
-        for name in fields:
+        if not fields:
+            raise ValueError("no fields to update")
+        for name, value in fields.items():
             if name in ("id", "type", "is_available"):
                 raise ValueError(f"{name} cannot be changed")
             if name not in item.editable_fields:
                 raise ValueError(f"{name} is not an editable field of a {item.item_type}")
+            check_field(name, value)
         for name, value in fields.items():
             setattr(item, name, value)
         return item
+
+    def replace_item(self, item_id, /, **fields):
+        """Replace all editable fields of an item at once.
+
+        Works like update_item(), but every editable field must be given.
+
+        Raises:
+            ItemNotFoundError: If no item has this id.
+            ValueError: If an editable field is missing, or for the same
+                reasons as update_item().
+        """
+        item = self.get_item(item_id)
+        missing = [name for name in item.editable_fields if name not in fields]
+        if missing:
+            raise ValueError(f"missing fields: {', '.join(missing)}")
+        return self.update_item(item_id, **fields)
 
     def remove_item(self, item_id):
         """Remove an item from the collection.

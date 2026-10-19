@@ -93,3 +93,44 @@ The single-page library app was designed in Figma with an AI coding tool through
 - **Figma (view-only):** [Library app design](https://www.figma.com/design/CZhIb4XToB6VuuPTPXXuTc/EE471-Week4-Library-App?node-id=0-1&t=lWF3u6F5ut9POitO-1)
 
 ![Library app design](Section%202/design/library.png)
+
+### Part 2: CRUD Methods
+
+`custom_classes.py` and `main.py` in `Section 2/` are copied from the Week 3 submodule and extended with unique item ids, `to_dict()`, the `ItemNotFoundError` and `ItemStateError` exceptions, and `get_item()`, `list_items()`, `update_item()` and `remove_item()` on `LibraryCollection`. Running `python main.py` calls every method and catches each exception. Prompts are in [PROMPTS.md](Section%202/PROMPTS.md).
+
+### Part 3: Flask REST API
+
+`app.py` exposes one `LibraryCollection` through a REST API. The routes only translate HTTP to method calls; all rules live in `custom_classes.py`. Every response is JSON, and errors are `{"error": "<message>"}`.
+
+The server starts with four items: Dune (1, book), Interstellar (2, DVD), Arrival (3, DVD, checked out) and The Hobbit (4, book).
+
+#### Run
+
+```bash
+cd "Section 2"
+pip install -r requirements.txt
+python app.py
+```
+
+The API runs at http://127.0.0.1:5000.
+
+#### Endpoints
+
+| Endpoint | Purpose | Success | Errors |
+|---|---|---|---|
+| `POST /api/items` | Create a Book or DVD | 201 + the new item | 400 |
+| `GET /api/items` | List items; supports `?available=true` and `?type=book` | 200 | 400 bad filter |
+| `GET /api/items/<id>` | Get one item | 200 | 404 |
+| `PUT /api/items/<id>` | Replace all editable fields | 200 | 400, 404 |
+| `PATCH /api/items/<id>` | Change some editable fields | 200 | 400, 404 |
+| `DELETE /api/items/<id>` | Remove an item | 204 | 404, 409 if checked out |
+| `POST /api/items/<id>/checkout` | Check an item out | 200 | 404, 409 already out |
+| `POST /api/items/<id>/return` | Return an item | 200 | 404, 409 not checked out |
+
+Request body for `POST /api/items`:
+
+```json
+{"type": "dvd", "title": "Arrival", "author": "Denis Villeneuve", "duration": 116}
+```
+
+A book uses `"type": "book"` and `page_count` instead of `duration`. `PUT` needs every editable field (`title`, `author`, and `page_count` or `duration`); `PATCH` takes any of them.

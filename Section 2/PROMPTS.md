@@ -36,3 +36,15 @@ Setup:
 > - Rewrite `main.py` so it calls every method once and triggers each exception, catching them with try/except.
 
 **Result:** `custom_classes.py` and `main.py` in `Section 2/`. The Week 3 code and docstrings were kept; only the parts the tasks required were changed. Running `python main.py` calls every method and catches `ItemNotFoundError`, `ItemStateError` and `ValueError`.
+
+## Part 3: Flask REST API
+
+### Prompt 3: Expose the LibraryCollection through a REST API
+
+> Create `Section 2/app.py`, a Flask REST API for one `LibraryCollection` seeded with at least 3 items of mixed types, and `Section 2/requirements.txt` with `flask`. Keep it simple.
+>
+> - Endpoints: `POST /api/items` (201), `GET /api/items` with `?available=true` and `?type=book` filters, `GET`, `PUT`, `PATCH` and `DELETE /api/items/<id>` (DELETE returns 204), `POST /api/items/<id>/checkout` and `POST /api/items/<id>/return`.
+> - Every response is JSON; errors are `{"error": "<message>"}`. Map `ValueError` to 400, `ItemNotFoundError` to 404 and `ItemStateError` to 409.
+> - The routes only translate HTTP to method calls. All rules stay in `custom_classes.py`: add the methods that are missing there (creating a Book or DVD from request fields, replacing all editable fields for PUT) and validate the values (non-empty title and author, positive whole numbers for page_count and duration).
+
+**Result:** `app.py` and `requirements.txt` in `Section 2/`. `custom_classes.py` got `create_item()`, `replace_item()` and value checks for new and updated fields.
