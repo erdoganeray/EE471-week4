@@ -1,0 +1,76 @@
+/* Sizes and colors are taken from the Figma design (design/calculator.png) */
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inter", Arial, sans-serif;
+  font-weight: 700;
+}
+
+/* Calculator frame: vertical Auto Layout, padding 8, gap 6 */
+.calculator {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  background: #0B78D0;
+}
+
+/* Display: 278 x 64, text aligned to the right */
+.display {
+  box-sizing: border-box;
+  width: 278px;
+  height: 64px;
+  padding: 0 10px;
+  overflow: hidden;
+  background: #FFFFFF;
+  font-size: 36px;
+  line-height: 64px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Smaller text so error messages from the server fit */
+.display.error {
+  font-size: 18px;
+}
+
+/* Keypad: rows stacked vertically, gap 6 */
+.keypad {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Row: buttons side by side, gap 6 */
+.row {
+  display: flex;
+  gap: 6px;
+}
+
+/* Button: 65 x 45 */
+.key {
+  width: 65px;
+  height: 45px;
+  border: none;
+  color: #FFFFFF;
+  font: inherit;
+  font-size: 36px;
+  cursor: pointer;
+}
+
+.digit {
+  background: #7A7A7A;
+}
+
+.operator,
+.decimal {
+  background: #A0A0A0;
+}
+
+.equals {
+  background: #004E99;
+}
