@@ -30,3 +30,14 @@ AI coding tool: **Claude Code** (Claude Opus 5.5)
 > `1 / 3` returns `0.3333333333` (12 characters). This does not fit the 36 px display and the last digit is cut off. In `WebCalculator.calculate()`, round results to 8 decimal places instead of 10 so that `1 / 3` shows `0.33333333`.
 
 **Result:** `web_calculator.py` now uses `round(result, 8)`. `1 / 3` returns `0.33333333`, which fits the display.
+
+## Prompt 4: Handle numbers outside the float range
+
+> While testing the API with every kind of input, I found two cases that do not return a proper error:
+>
+> - Dividing an integer with 309+ digits (`{"a": 1000…000, "operator": "/", "b": 1}`) raises `OverflowError` and the server returns `500 Internal Server Error`.
+> - `{"a": 1e308, "operator": "*", "b": 10}` returns `200 {"result": Infinity}`, and `NaN` or `Infinity` as input returns `{"result": NaN}`. `Infinity` and `NaN` are not valid JSON.
+>
+> Fix this in `web_calculator.py` without changing the Mini Project 1 `Calculator`. Reject `NaN`, `Infinity` and integers too large for a float with the existing `a and b must be numbers` error. If the result is not a finite number, return 400 with `{"error": "Result is too large"}`.
+
+**Result:** `is_number()` now also checks `math.isfinite()` and returns `False` for integers too large for a float, and `calculate()` raises `ValueError("Result is too large")` when the result is not finite. Both cases now return 400 with a JSON error message.

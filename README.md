@@ -75,8 +75,9 @@ Request body (`operator` is one of `+`, `-`, `*`, `/`):
 |---|---|---|
 | Success | 200 | `{"result": 15}` |
 | Division by zero | 400 | `{"error": "Cannot divide by zero"}` |
-| `a` or `b` missing or not a number | 400 | `{"error": "a and b must be numbers"}` |
+| `a` or `b` missing, not a number, `NaN` or `Infinity` | 400 | `{"error": "a and b must be numbers"}` |
 | Unknown operator | 400 | `{"error": "operator must be one of + - * /"}` |
+| Result too large for a number (e.g. `1e308 * 10`) | 400 | `{"error": "Result is too large"}` |
 | Body is not a JSON object | 400 | `{"error": "Request body must be a JSON object"}` |
 
 ## Section 2: Library App

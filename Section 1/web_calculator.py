@@ -1,4 +1,5 @@
 """Extends the Calculator class from Mini Project 1 for the web API."""
+import math
 import sys
 from pathlib import Path
 
@@ -10,7 +11,13 @@ from custom_classes import Calculator  # noqa: E402
 
 def is_number(value):
     # JSON true/false become bool, which Python also treats as int
-    return isinstance(value, (int, float)) and not isinstance(value, bool)
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return False
+    # NaN, Infinity and integers too large for a float are not valid JSON numbers
+    try:
+        return math.isfinite(value)
+    except OverflowError:
+        return False
 
 
 class WebCalculator(Calculator):
@@ -36,6 +43,10 @@ class WebCalculator(Calculator):
             result = self.divide(a, b)
         else:
             raise ValueError("operator must be one of + - * /")
+
+        # 1e308 * 10 gives inf, which cannot be sent back as JSON
+        if not is_number(result):
+            raise ValueError("Result is too large")
 
         # Removes floating-point noise (0.1 + 0.2 = 0.30000000000000004)
         # and keeps results short enough for the display
